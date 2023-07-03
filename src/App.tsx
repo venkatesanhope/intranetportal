@@ -1,24 +1,26 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-
+import "./assets/css/animate.css";
+import "./assets/css/sb-admin-2.min.css";
+import Dashboard from './components/Dashboard/Dashboard';
+import Sidebar from './components/Sidebar/Sidebar';
+import Topbar from './components/Topbar/Topbar';
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div id="wrapper">
+        <Sidebar></Sidebar>
+        <div id="content-wrapper" className="d-flex flex-column">
+          <div id="content">
+            <Topbar></Topbar>
+            <div className="grid-container">
+              <Dashboard></Dashboard>
+            </div>
+          </div>
+        </div>
+
+      </div>
     </div>
   );
 }
