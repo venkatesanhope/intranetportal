@@ -1,23 +1,16 @@
-import { useEffect, useMemo, useState } from 'react';
-import SimpleImageSlider from "react-simple-image-slider";
-import image1 from './1.jpg';
-import image2 from './3.jpg';
-import image3 from './9.jpg';
-import image4 from './2.jpg';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import imgone from './2.jpg'
+
 import './Dashboard.css';
+const imagesprofile = [imgone, imgone, imgone];
+const delay = 2500;
+
 const Dashboard = () => {
 
     const [qsidatas, setQsiData] = useState<any>("");
-    const [dataCount, setDataCount] = useState(0);
-    const images = [
-        { url: image4 },
-        { url: image2 },
-        { url: image3 },
-        { url: image1 },
-        { url: image2 },
-        { url: image3 },
-        { url: image1 },
-    ];
+    const [index, setIndex] = useState(0);
+    const timeoutRef = useRef<any>(null);
+
     useEffect(() => {
         fetch("https://www.quicksort.us/react/intranet.json")
             .then((response) => response.json())
@@ -25,6 +18,27 @@ const Dashboard = () => {
             .catch((error) => console.error(error))
         console.log(qsidatas)
     }, []);
+
+    function resetTimeout() {
+        if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current);
+        }
+    }
+
+    useEffect(() => {
+        resetTimeout();
+        timeoutRef.current = setTimeout(
+            () =>
+                setIndex((prevIndex) =>
+                    prevIndex === imagesprofile.length - 1 ? 0 : prevIndex + 1
+                ),
+            delay
+        );
+
+        return () => {
+            resetTimeout();
+        };
+    }, [index]);
 
     return (
         <>
@@ -39,7 +53,7 @@ const Dashboard = () => {
                             </div>
 
                             <div className="card-body" >
-                                <video className="videocontrol" src={ ""} controls />
+                                <video className="videocontrol" src={""} controls />
 
                             </div>
                         </div>
@@ -72,27 +86,43 @@ const Dashboard = () => {
                 <div className="row">
 
 
-                    <div className="col-xl-6 col-md-6 mb-4">
+                    <div className="col-xl-3 col-md-3 mb-4">
                         <div className="card border-left-primary shadow h-100">
                             <div className="card-body1">
-                                <p className="m-0 font-weight-bold text-primary" style={{ paddingBottom: "-20px" }} >New Employees</p>
+                                <p className="m-0 font-weight-bold text-primary" style={{ paddingBottom: "-20px" }} >Today Birthday's</p>
                             </div>
-                            <div className="card-body ">
-                            <div className="row" >
-                                    <SimpleImageSlider
-                                        width={250}
-                                        height={160}
-                                        images={images}
-                                        showBullets={false}
-                                        showNavs={true}
-                                        slideDuration={0.5}
-                                    />
+                            <div className="card-body " style={{ paddingLeft: "35px", paddingRight: "35px" }}>
+
+                                <div className="slideshow">
+                                    <div className="slideshowSlider" style={{ transform: `translate3d(${-index * 100}%, 0, 0)` }}>
+                                        {imagesprofile.map((backgroundColor, index) => (
+                                            <img src={imgone}
+                                                className="slide"
+                                                key={index}
+                                                style={{ backgroundColor }}
+                                            ></img>
+                                        ))}
+                                    </div>
+
+                                    <div className="slideshowDots">
+                                        {imagesprofile.map((_, idx) => (
+                                            <div
+                                                key={idx}
+                                                className={`slideshowDot${index === idx ? " active" : ""}`}
+                                                onClick={() => {
+                                                    setIndex(idx);
+                                                }}
+                                            ></div>
+                                        ))}
+                                    </div>
                                 </div>
+
+
+
+
                             </div>
                         </div>
                     </div>
-
-
 
 
                     <div className="col-xl-6 col-md-6 mb-4">
@@ -118,6 +148,49 @@ const Dashboard = () => {
                             </div>
                         </div>
                     </div>
+
+
+                    <div className="col-xl-3 col-md-3 mb-4">
+                        <div className="card border-left-primary shadow h-100">
+                            <div className="card-body1">
+                                <p className="m-0 font-weight-bold text-primary" style={{ paddingBottom: "-20px" }} >New Employees</p>
+                            </div>
+                            <div className="card-body " style={{ paddingLeft: "35px", paddingRight: "35px" }}>
+
+                                <div className="slideshow">
+                                    <div className="slideshowSlider" style={{ transform: `translate3d(${-index * 100}%, 0, 0)` }}>
+                                        {imagesprofile.map((backgroundColor, index) => (
+                                            <img src={imgone}
+                                                className="slide"
+                                                key={index}
+                                                style={{ backgroundColor }}
+                                            ></img>
+                                        ))}
+                                    </div>
+
+                                    <div className="slideshowDots">
+                                        {imagesprofile.map((_, idx) => (
+                                            <div
+                                                key={idx}
+                                                className={`slideshowDot${index === idx ? " active" : ""}`}
+                                                onClick={() => {
+                                                    setIndex(idx);
+                                                }}
+                                            ></div>
+                                        ))}
+                                    </div>
+                                </div>
+
+
+
+
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
                 </div>
 
             </div>
