@@ -1,28 +1,16 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import imgone from './2.jpg'
-import imgtwo from './1.jpg'
-import imgthree from './3.jpg'
-import imgfour from './9.jpg'
+
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import './Dashboard.css';
 //const imagesprofile = [imgone, imgone, imgone];
 //const imagesprofile:any = [];
-const eventsprofile = [imgtwo, imgthree, imgfour, imgthree, imgtwo, imgfour, imgtwo, imgthree, imgfour, imgthree, imgtwo, imgfour, imgtwo, imgthree, imgfour, imgthree, imgtwo, imgfour];
-const delay = 2500;
-var count = 0;
+
 const Dashboard = () => {
-    // const [imagesprofile, setImagesProfile] = useState<any>([])
-    const [currentDate, setcurrentDate] = useState(0);
-    const [currentMonth, setcurrentMonth] = useState(0);
-    const [birthdayList, setBirthdayList] = useState<any>([]);
-    const [date, setDate] = useState<any>(new Date());
+
     const [qsidatas, setQsiData] = useState<any>("");
     const [qsidob, setQsiDob] = useState<any>([]);
-    const [imageCount, setImageCount] = useState(0);
-    const [profileCount, setProfileCount] = useState(0);
-    const imageTimeOutRef = useRef<any>(null);
-    const profileTimeOutRef = useRef<any>(null);
+    const [date, setDate] = useState<any>(new Date());
 
 
     useEffect(() => {
@@ -41,100 +29,7 @@ const Dashboard = () => {
 
     }, []);
 
-    function imageResetTimout() {
-        if (imageTimeOutRef.current) {
-            clearTimeout(imageTimeOutRef.current);
-        }
-    }
-    function profileResetTimeout() {
-        if (profileTimeOutRef.current) {
-            clearTimeout(profileTimeOutRef.current);
-        }
-    }
-
-
-
-
-
-    const imagesprofile = useMemo(() => {
-        console.log("___ello______")
-      const filteredEmployees=  qsidob.filter((filterEmpId: any) => {
-           return filterEmpId.EmpMonth == currentMonth && filterEmpId.EmpDate == currentDate
-         })
-        const ids = filteredEmployees.map((filteredEmployee:any)=>filteredEmployee.EmpId)
-        return ids
-    }, [qsidob, currentMonth, currentDate])
-
-       console.log(imagesprofile+"_________")
-
-    /* // console.log(filterempidforbirthday)
- 
-          useEffect(() => {
-             qsidob.map((empdatesMonth: any) => {
-     
-                 if (empdatesMonth.EmpMonth == currentMonth) {
-                    console.log(empdatesMonth.EmpDate + "==" + currentDate)
-                     if (empdatesMonth.EmpDate == currentDate) {
-                         setBirthdayList(empdatesMonth.EmpId);
-                     }
-                 }
-             })
-     
-         }, [qsidob, currentDate, currentMonth]); */
-
-    useEffect(() => {
-        var today = new Date()
-        let date = today.getDate();
-        setcurrentDate(date);
-        let month = today.getMonth() + 1;
-        setcurrentMonth(month)
-    },[]);
-
-/*     useEffect(() => {
-        var timer = setInterval(() => setDate(new Date()), 1000)
-        return function cleanup() {
-            clearInterval(timer)
-        }
-
-    },[]); */
-
-
-    useEffect(() => {
-        imageResetTimout();
-        //setIndex(imagesprofile.length);
-        console.log(imagesprofile.length + "{______________length")
-        imageTimeOutRef.current = setTimeout(
-
-            () =>
-                setImageCount((prevIndex) =>
-                    prevIndex === imagesprofile.length - 1 ? 0 : prevIndex + 1
-                ),
-            delay
-        );
-
-        return () => {
-            imageResetTimout();
-        };
-
-    }, [imageCount]);
-
-
-    useEffect(() => {
-        profileResetTimeout();
-        // setIndex(eventsprofile.length);
-        profileTimeOutRef.current = setTimeout(
-            () =>
-                setProfileCount((prevIndex2) =>
-                    prevIndex2 === eventsprofile.length - 1 ? 0 : prevIndex2 + 1
-                ),
-            delay
-        );
-
-        return () => {
-            profileResetTimeout();
-        };
-    }, [profileCount]);
-
+   
 
     return (
         <>
@@ -154,7 +49,7 @@ const Dashboard = () => {
                         </div>
                         <div className="card shadow mb-4">
                             <div className="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                <h6 className="m-0 font-weight-bold text-primary"> <span > {date.toLocaleDateString()} &nbsp;{date.toLocaleTimeString()}</span></h6>
+                            <h6 className="m-0 font-weight-bold text-primary"> <span > {date.toLocaleDateString()} &nbsp;{date.toLocaleTimeString()}</span></h6>
                             </div>
 
                         </div>
@@ -190,20 +85,8 @@ const Dashboard = () => {
                             <div className="card-body " style={{ paddingLeft: "35px", paddingRight: "35px" }}>
 
                                 <div className="slideshow">
-                                    <div className="slideshowSlider" style={{ transform: `translate3d(${-imageCount * 100}%, 0, 0)` }}>
-                                        {imagesprofile.map((employee: any) => {
-                                            //console.log(employee);
-                                            <img src={"https://www.quicksort.us/react/assets/images/employees/" + employee + ".jpg"}
-                                                className="slide"></img>
-
-                                        })}
-                                        {/*{imagesprofile.map((imagesPro) => (
-                                            <img src={imagesPro}
-                                                className="slide"
-
-                                            ></img>
-                                        ))} 
-                                        {filterempidforbirthday}*/}
+                                    <div className="slideshowSlider" >
+                                       
                                     </div>
                                 </div>
                             </div>
@@ -244,12 +127,8 @@ const Dashboard = () => {
                             <div className="card-body " style={{ paddingLeft: "35px", paddingRight: "35px" }}>
 
                                 <div className="slideshow">
-                                    <div className="slideshowSlider" style={{ transform: `translate3d(${-imageCount * 100}%, 0, 0)` }}>
-                                        {imagesprofile.map((imagesPro: any) => (
-                                            <img src={imagesPro}
-
-                                            ></img>
-                                        ))}
+                                    <div className="slideshowSlider" >
+                                        
                                     </div>
 
                                 </div>
@@ -269,10 +148,8 @@ const Dashboard = () => {
                             </div>
                             <div className="card-body" >
                                 <div className="slideshow">
-                                    <div className="slideshowSlider" style={{ transform: `translate3d(${-profileCount * 100}%, 0, 0)` }}>
-                                        {eventsprofile.map((eventsImage) => (
-                                            <img style={{ width: "100%" }} src={eventsImage}></img>
-                                        ))}
+                                    <div className="slideshowSlider">
+                                        
                                     </div>
                                 </div>
                             </div>
@@ -285,10 +162,8 @@ const Dashboard = () => {
                             </div>
                             <div className="card-body" >
                                 <div className="slideshow">
-                                    <div className="slideshowSlider" style={{ transform: `translate3d(${-profileCount * 100}%, 0, 0)` }}>
-                                        {eventsprofile.map((eventsImage) => (
-                                            <img style={{ width: "100%" }} src={eventsImage}></img>
-                                        ))}
+                                    <div className="slideshowSlider" >
+                                       
                                     </div>
                                 </div>
                             </div>

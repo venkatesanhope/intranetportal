@@ -33,7 +33,7 @@
   display: inline-block;
   height: 150px;
   width: 100%;
-  border-radius: 40px;
+ /*  border-radius: 40px; */
 }
 
 
@@ -219,4 +219,8 @@
 .react-calendar__month-view__weekdays
 {
   color:#000;
+}
+.react-calendar__tile
+{
+  height: 36px;
 }

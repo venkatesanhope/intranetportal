@@ -1,25 +1,39 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import imgone from './2.jpg'
 
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import './Dashboard.css';
 //const imagesprofile = [imgone, imgone, imgone];
 //const imagesprofile:any = [];
-
+//const eventsprofile = [imgtwo, imgthree, imgfour, imgthree, imgtwo, imgfour, imgtwo, imgthree, imgfour, imgthree, imgtwo, imgfour, imgtwo, imgthree, imgfour, imgthree, imgtwo, imgfour];
+const delay = 2500;
+var count = 0;
+var Empname = ""
+var Empid = ""
 const Dashboard = () => {
-
+    // const [imagesprofile, setImagesProfile] = useState<any>([])
+    const [currentDate, setcurrentDate] = useState(0);
+    const [currentMonth, setcurrentMonth] = useState(0);
+    const [birthdayList, setBirthdayList] = useState<any>([]);
+    const [date, setDate] = useState<any>(new Date());
     const [qsidatas, setQsiData] = useState<any>("");
     const [qsidob, setQsiDob] = useState<any>([]);
-
-
+    const [imageCount, setImageCount] = useState(0);
+    const [profileCount, setProfileCount] = useState(0);
+    const imageTimeOutRef = useRef<any>(null);
+    const profileTimeOutRef = useRef<any>(null);
 
     useEffect(() => {
-        fetch("https://www.quicksort.us/react/intranet.json")
-            .then((response) => response.json())
-            .then((data) => setQsiData(data.qsi))
-            .catch((error) => console.error(error))
+        const fetchData = async () => {
+            const response = await fetch("https://www.quicksort.us/react/intranet.json");
+            const newData = await response.json();
+            setQsiData(newData.qsi);
+        };
 
+        fetchData();
     }, []);
+
 
     useEffect(() => {
         fetch("https://www.quicksort.us/react/intranet.json")
@@ -29,7 +43,97 @@ const Dashboard = () => {
 
     }, []);
 
-   
+    function imageResetTimout() {
+        if (imageTimeOutRef.current) {
+            clearTimeout(imageTimeOutRef.current);
+        }
+    }
+    function profileResetTimeout() {
+        if (profileTimeOutRef.current) {
+            clearTimeout(profileTimeOutRef.current);
+        }
+    }
+
+    const imagesprofile = useMemo(() => {
+        // console.log("___ello______")
+        const filteredEmployees = qsidob.filter((filterEmpId: any) => {
+            return filterEmpId.EmpMonth == currentMonth && filterEmpId.EmpDate == currentDate
+        })
+        const ids = filteredEmployees.map((filteredEmployee: any) => filteredEmployee.EmpId + "_" + filteredEmployee.EmpName)
+        return ids
+
+    }, [qsidob, currentMonth, currentDate])
+
+    //console.log(imagesprofile + "_________")
+
+    /* // console.log(filterempidforbirthday)
+ 
+          useEffect(() => {
+             qsidob.map((empdatesMonth: any) => {
+     
+                 if (empdatesMonth.EmpMonth == currentMonth) {
+                    console.log(empdatesMonth.EmpDate + "==" + currentDate)
+                     if (empdatesMonth.EmpDate == currentDate) {
+                         setBirthdayList(empdatesMonth.EmpId);
+                     }
+                 }
+             })
+     
+         }, [qsidob, currentDate, currentMonth]); */
+
+    useEffect(() => {
+        var today = new Date()
+        let date = today.getDate();
+        setcurrentDate(date);
+        let month = today.getMonth() + 1;
+        setcurrentMonth(month)
+    }, []);
+
+    useEffect(() => {
+        var timer = setInterval(() => setDate(new Date()), 1000)
+        return function cleanup() {
+            clearInterval(timer)
+        }
+
+    }, []);
+
+
+    useEffect(() => {
+        imageResetTimout();
+
+        // console.log(imagesprofile.length + "{______________length")
+        imageTimeOutRef.current = setTimeout(
+
+            () =>
+                setImageCount((prevIndex) =>
+                    prevIndex === imagesprofile.length - 1 ? 0 : prevIndex + 1
+                ),
+            delay
+        );
+
+        return () => {
+            imageResetTimout();
+        };
+
+    }, [imageCount]);
+
+
+    /* useEffect(() => {
+         profileResetTimeout();
+         // setIndex(eventsprofile.length);
+         profileTimeOutRef.current = setTimeout(
+             () =>
+                 setProfileCount((prevIndex2) =>
+                     prevIndex2 === eventsprofile.length - 1 ? 0 : prevIndex2 + 1
+                 ),
+             delay
+         );
+  
+         return () => {
+             profileResetTimeout();
+         };
+     }, [profileCount]); */
+
 
     return (
         <>
@@ -49,7 +153,7 @@ const Dashboard = () => {
                         </div>
                         <div className="card shadow mb-4">
                             <div className="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                <h6 className="m-0 font-weight-bold text-primary"> <span ></span></h6>
+                                <h6 className="m-0 font-weight-bold text-primary"> <span > {date.toLocaleDateString()} &nbsp;{date.toLocaleTimeString()}</span></h6>
                             </div>
 
                         </div>
@@ -85,13 +189,40 @@ const Dashboard = () => {
                             <div className="card-body " style={{ paddingLeft: "35px", paddingRight: "35px" }}>
 
                                 <div className="slideshow">
-                                    <div className="slideshowSlider" >
-                                       
+                                    <div className="slideshowSlider" style={{ transform: `translate3d(${-imageCount * 100}%, 0, 0)` }}>
+                                        {
+                                            imagesprofile.map((employee: any) => {
+                                                Empid = employee.split("_")[0]
+                                                Empname = employee.split("_")[1]
+
+                                                return (
+                                                    <>
+
+                                                        <img src={"https://www.quicksort.us/react/assets/images/employees/" + Empid + ".jpg"} className="slide" />
+                                                    </>
+                                                )
+
+                                            })
+                                        }
                                     </div>
                                 </div>
                             </div>
-                            <div className="card-footer">
-                                <p className="m-0 font-weight-bold text-primary" style={{ paddingBottom: "-20px" }} >Managing Director</p>
+                            <div className="card-footer slideshowSlider" style={{ display: "flex", justifyContent: "space-between", transform: `translate3d(${-imageCount * 100}%, 0, 0)` }}>
+                                {
+                                    imagesprofile.map((employee: any) => {
+
+                                        Empname = employee.split("_")[1]
+
+                                        return (
+                                            <>
+                                                <p style={{ float: "left" }} className="m-0 font-weight-bold text-primary"  >{Empname}</p>
+
+                                            </>
+                                        )
+
+                                    })
+                                }
+
                             </div>
                         </div>
                     </div>
@@ -127,8 +258,13 @@ const Dashboard = () => {
                             <div className="card-body " style={{ paddingLeft: "35px", paddingRight: "35px" }}>
 
                                 <div className="slideshow">
-                                    <div className="slideshowSlider" >
-                                        
+                                    <div className="slideshowSlider" style={{ transform: `translate3d(${-imageCount * 100}%, 0, 0)` }}>
+                                        {/* {imagesprofile.map((employee: any) => {
+                                            console.log(employee);
+                                            <img src={"https://www.quicksort.us/react/assets/images/employees/" + employee + ".jpg"}
+                                                className="slide"></img>
+
+                                        })} */}
                                     </div>
 
                                 </div>
@@ -148,8 +284,10 @@ const Dashboard = () => {
                             </div>
                             <div className="card-body" >
                                 <div className="slideshow">
-                                    <div className="slideshowSlider">
-                                        
+                                    <div className="slideshowSlider" style={{ transform: `translate3d(${-profileCount * 100}%, 0, 0)` }}>
+                                        {/*  {eventsprofile.map((eventsImage) => (
+                                            <img style={{ width: "100%" }} src={eventsImage}></img>
+                                        ))} */}
                                     </div>
                                 </div>
                             </div>
@@ -162,8 +300,10 @@ const Dashboard = () => {
                             </div>
                             <div className="card-body" >
                                 <div className="slideshow">
-                                    <div className="slideshowSlider" >
-                                       
+                                    <div className="slideshowSlider" style={{ transform: `translate3d(${-profileCount * 100}%, 0, 0)` }}>
+                                        {/*  {eventsprofile.map((eventsImage) => (
+                                            <img style={{ width: "100%" }} src={eventsImage}></img>
+                                        ))} */}
                                     </div>
                                 </div>
                             </div>
@@ -241,10 +381,10 @@ const Dashboard = () => {
                             <div className="card-body" >
                                 <div >
                                     <div className="calendar-container">
-                                       
+                                        <Calendar onChange={setDate} value={date} />
                                     </div>
                                     <div className="text-center">
-                                       
+                                        Selected date: {date.toDateString()}
                                     </div>
                                 </div>
                             </div>
