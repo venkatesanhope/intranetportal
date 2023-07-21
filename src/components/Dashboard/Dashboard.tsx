@@ -24,6 +24,7 @@ const Dashboard = () => {
     const imageTimeOutRef = useRef<any>(null);
     const profileTimeOutRef = useRef<any>(null);
 
+    
     useEffect(() => {
         const fetchData = async () => {
             const response = await fetch("https://www.quicksort.us/react/intranet.json");
